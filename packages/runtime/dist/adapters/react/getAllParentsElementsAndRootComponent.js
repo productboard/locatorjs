@@ -6,7 +6,7 @@ export function getAllParentsElementsAndRootComponent(fiber) {
   const parentElements = [];
   const deepestElement = fiber.stateNode;
 
-  if (!deepestElement || !(deepestElement instanceof HTMLElement)) {
+  if (!deepestElement || !(deepestElement instanceof HTMLElement || deepestElement instanceof Element)) {
     throw new Error("This functions works only for Fibres with HTMLElement stateNode");
   }
 

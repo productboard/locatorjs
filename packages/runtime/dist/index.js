@@ -10,12 +10,14 @@ export const MAX_ZINDEX = 2147483647;
 export function setup({
   adapter,
   targets,
-  projectPath
+  projectPath,
+  mode
 } = {}) {
   setTimeout(() => initRuntime({
     adapter,
     targets,
-    projectPath
+    projectPath,
+    mode
   }), 0);
 }
 export default setup;

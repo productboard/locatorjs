@@ -15,6 +15,7 @@ import { render } from "solid-js/web";
 import { isCombinationModifiersPressed } from "../functions/isCombinationModifiersPressed";
 import { trackClickStats } from "../functions/trackClickStats";
 import { MaybeOutline } from "./MaybeOutline";
+import { UsageOutline } from "./UsageOutline";
 import { SimpleNodeOutline } from "./SimpleNodeOutline";
 import { IntroInfo } from "./IntroInfo";
 import { Options } from "./Options";
@@ -35,6 +36,7 @@ function Runtime(props) {
   const [uiMode, setUiMode] = createSignal(["off"]);
   const [holdingModKey, setHoldingModKey] = createSignal(false);
   const [currentElement, setCurrentElement] = createSignal(null);
+  const [icons, setIcons] = createSignal([]);
   const [dialog, setDialog] = createSignal(null);
   const [highlightedNode, setHighlightedNode] = createSignal(null);
   createEffect(() => {
@@ -57,6 +59,14 @@ function Runtime(props) {
   }
 
   function keyDownListener(e) {
+    if (props.mode === 'legacy-icons') {
+      setIcons(Array.from(document.querySelectorAll('.pb-icon')));
+    }
+
+    if (props.mode === 'nucleus') {
+      setIcons(Array.from(document.querySelectorAll('[data-nc]')));
+    }
+
     setHoldingModKey(isCombinationModifiersPressed(e));
   }
 
@@ -89,11 +99,23 @@ function Runtime(props) {
   }
 
   function clickListener(e) {
+    if (props.mode === 'legacy-icons') {
+      setIcons(Array.from(document.querySelectorAll('.pb-icon')));
+    }
+
+    if (props.mode === 'nucleus') {
+      setIcons(Array.from(document.querySelectorAll('[data-nc]')));
+    }
+
     if (!isCombinationModifiersPressed(e)) {
       return;
     }
 
     const target = e.target;
+
+    if (props.mode === 'legacy-icons') {
+      return;
+    }
 
     if (target && target instanceof HTMLElement) {
       if (isLocatorsOwnElement(target)) {
@@ -186,7 +208,7 @@ function Runtime(props) {
       setHighlightedNode: setHighlightedNode
     }) : null;
   })()), _$memo((() => {
-    const _c$2 = _$memo(() => !!(holdingModKey() && currentElement()), true);
+    const _c$2 = _$memo(() => !!(props.mode === 'locate' && holdingModKey() && currentElement()), true);
 
     return () => _c$2() ? _$createComponent(MaybeOutline, {
       get currentElement() {
@@ -205,9 +227,25 @@ function Runtime(props) {
 
     }) : null;
   })()), _$memo((() => {
-    const _c$3 = _$memo(() => !!holdingModKey(), true);
+    const _c$3 = _$memo(() => !!((props.mode === 'legacy-icons' || props.mode === 'nucleus') && holdingModKey() && icons().length), true);
 
-    return () => _c$3() ? (() => {
+    return () => _c$3() && icons().map(el => _$createComponent(UsageOutline, {
+      currentElement: el,
+      showTreeFromElement: showTreeFromElement,
+
+      get adapterId() {
+        return props.adapterId;
+      },
+
+      get targets() {
+        return props.targets;
+      }
+
+    }));
+  })()), _$memo((() => {
+    const _c$4 = _$memo(() => !!holdingModKey(), true);
+
+    return () => _c$4() ? (() => {
       const _el$ = _tmpl$.cloneNode(true);
 
       _$insert(_el$, _$createComponent(BannerHeader, {
@@ -224,18 +262,18 @@ function Runtime(props) {
       return _el$;
     })() : null;
   })()), _$memo((() => {
-    const _c$4 = _$memo(() => !!highlightedNode(), true);
+    const _c$5 = _$memo(() => !!highlightedNode(), true);
 
-    return () => _c$4() ? _$createComponent(SimpleNodeOutline, {
+    return () => _c$5() ? _$createComponent(SimpleNodeOutline, {
       get node() {
         return highlightedNode();
       }
 
     }) : null;
   })()), _$memo((() => {
-    const _c$5 = _$memo(() => !!!isExtension(), true);
+    const _c$6 = _$memo(() => !!!isExtension(), true);
 
-    return () => _c$5() ? _$createComponent(IntroInfo, {
+    return () => _c$6() ? _$createComponent(IntroInfo, {
       openOptions: openOptions,
 
       get hide() {
@@ -248,9 +286,9 @@ function Runtime(props) {
 
     }) : null;
   })()), _$memo((() => {
-    const _c$6 = _$memo(() => uiMode()[0] === "options", true);
+    const _c$7 = _$memo(() => uiMode()[0] === "options", true);
 
-    return () => _c$6() ? _$createComponent(Options, {
+    return () => _c$7() ? _$createComponent(Options, {
       get adapterId() {
         return props.adapterId;
       },
@@ -264,9 +302,9 @@ function Runtime(props) {
       }
     }) : null;
   })()), _$memo((() => {
-    const _c$7 = _$memo(() => !!dialog(), true);
+    const _c$8 = _$memo(() => !!dialog(), true);
 
-    return () => _c$7() && (() => {
+    return () => _c$8() && (() => {
       const _el$2 = _tmpl$2.cloneNode(true);
 
       _el$2.$$click = e => {
@@ -276,15 +314,15 @@ function Runtime(props) {
       };
 
       _$insert(_el$2, (() => {
-        const _c$8 = _$memo(() => dialog()[0] === "no-link", true);
+        const _c$9 = _$memo(() => dialog()[0] === "no-link", true);
 
-        return () => _c$8() && _$createComponent(NoLinkDialog, {});
+        return () => _c$9() && _$createComponent(NoLinkDialog, {});
       })(), null);
 
       _$insert(_el$2, (() => {
-        const _c$9 = _$memo(() => dialog()[0] === "choose-editor", true);
+        const _c$10 = _$memo(() => dialog()[0] === "choose-editor", true);
 
-        return () => _c$9() && _$createComponent(ChooseEditorDialog, {
+        return () => _c$10() && _$createComponent(ChooseEditorDialog, {
           get targets() {
             return props.targets;
           },
@@ -304,7 +342,7 @@ function Runtime(props) {
   })())];
 }
 
-export function initRender(solidLayer, adapter, targets) {
+export function initRender(solidLayer, adapter, targets, mode) {
   render(() => _$createComponent(Runtime, {
     get targets() {
       return Object.fromEntries(Object.entries(targets).map(([key, t]) => {
@@ -315,7 +353,8 @@ export function initRender(solidLayer, adapter, targets) {
       }));
     },
 
-    adapterId: adapter
+    adapterId: adapter,
+    mode: mode
   }), solidLayer);
 }
 

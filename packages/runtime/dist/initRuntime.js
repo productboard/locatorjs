@@ -6,7 +6,8 @@ import { setInternalProjectPath } from "./functions/buildLink";
 export function initRuntime({
   adapter,
   targets,
-  projectPath
+  projectPath,
+  mode = 'locate'
 } = {}) {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return;
@@ -77,12 +78,12 @@ export function initRuntime({
       initRender
     } = require("./components/Runtime");
 
-    initRender(layer, adapter, targets || allTargets);
+    initRender(layer, adapter, targets || allTargets, mode);
   } else {
     import("./components/Runtime").then(({
       initRender
     }) => {
-      initRender(layer, adapter, targets || allTargets);
+      initRender(layer, adapter, targets || allTargets, mode);
     });
   }
 }
