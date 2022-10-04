@@ -1,11 +1,7 @@
 {
   "name": "turborepo-basic-shared",
   "version": "0.0.0",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "main": "packages/runtime/dist/index.js",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
