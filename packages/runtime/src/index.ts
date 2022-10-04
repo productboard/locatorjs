@@ -15,15 +15,15 @@ export function setup({
   adapter,
   targets,
   projectPath,
-  mode,
+  usageQueryString,
 }: {
   adapter?: AdapterId;
   // defaultMode?: LocatorJSMode;
   targets?: { [k: string]: Target | string };
   projectPath?: string;
-  mode?: 'locate' | 'legacy-icons' | 'nucleus';
+  usageQueryString?: string;
 } = {}) {
-  setTimeout(() => initRuntime({ adapter, targets, projectPath, mode }), 0);
+  setTimeout(() => initRuntime({ adapter, targets, projectPath, usageQueryString }), 0);
 }
 
 export default setup;

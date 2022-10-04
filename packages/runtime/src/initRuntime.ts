@@ -8,12 +8,12 @@ export function initRuntime({
   adapter,
   targets,
   projectPath,
-  mode = 'locate',
+  usageQueryString,
 }: {
   adapter?: AdapterId;
   targets?: { [k: string]: Target | string };
   projectPath?: string;
-  mode?: 'locate' | 'legacy-icons' | 'nucleus';
+  usageQueryString?: string;
 } = {}) {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return;
@@ -84,10 +84,10 @@ export function initRuntime({
   if (typeof require !== "undefined") {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { initRender } = require("./components/Runtime");
-    initRender(layer, adapter, targets || allTargets, mode);
+    initRender(layer, adapter, targets || allTargets, usageQueryString);
   } else {
     import("./components/Runtime").then(({ initRender }) => {
-      initRender(layer, adapter, targets || allTargets, mode);
+      initRender(layer, adapter, targets || allTargets, usageQueryString);
     });
   }
 }

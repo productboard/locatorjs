@@ -28,13 +28,13 @@ import { TreeView } from "./TreeView";
 
 type UiMode = ["off"] | ["options"] | ["tree", TreeState];
 
-function Runtime(props: { adapterId?: AdapterId; targets: Targets, mode: 'locate' | 'legacy-icons'  | 'nucleus' }) {
+function Runtime(props: { adapterId?: AdapterId; targets: Targets, usageQueryString?: string }) {
   const [uiMode, setUiMode] = createSignal<UiMode>(["off"]);
   const [holdingModKey, setHoldingModKey] = createSignal<boolean>(false);
   const [currentElement, setCurrentElement] = createSignal<HTMLElement | null>(
     null
   );
-  const [icons, setIcons] = createSignal<HTMLElement[]>([])
+  const [locatedElements, setLocatedElements] = createSignal<HTMLElement[]>([])
 
   const [dialog, setDialog] = createSignal<
     ["no-link"] | ["choose-editor", LinkProps] | null
@@ -65,11 +65,8 @@ function Runtime(props: { adapterId?: AdapterId; targets: Targets, mode: 'locate
   }
 
   function keyDownListener(e: KeyboardEvent) {
-    if (props.mode === 'legacy-icons') {
-      setIcons(Array.from(document.querySelectorAll('.pb-icon')) as HTMLElement[]);
-    }
-    if (props.mode === 'nucleus') {
-      setIcons(Array.from(document.querySelectorAll('[data-nc]')) as HTMLElement[]);
+    if (props.usageQueryString) {
+      setLocatedElements(Array.from(document.querySelectorAll(props.usageQueryString)) as HTMLElement[]);
     }
     setHoldingModKey(isCombinationModifiersPressed(e));
   }
@@ -106,11 +103,8 @@ function Runtime(props: { adapterId?: AdapterId; targets: Targets, mode: 'locate
   }
 
   function clickListener(e: MouseEvent) {
-    if (props.mode === 'legacy-icons') {
-      setIcons(Array.from(document.querySelectorAll('.pb-icon')) as HTMLElement[]);
-    }
-    if (props.mode === 'nucleus') {
-      setIcons(Array.from(document.querySelectorAll('[data-nc]')) as HTMLElement[]);
+    if (props.usageQueryString) {
+      setLocatedElements(Array.from(document.querySelectorAll(props.usageQueryString)) as HTMLElement[]);
     }
 
     if (!isCombinationModifiersPressed(e)) {
@@ -119,7 +113,7 @@ function Runtime(props: { adapterId?: AdapterId; targets: Targets, mode: 'locate
 
     const target = e.target;
 
-    if (props.mode === 'legacy-icons') {
+    if (props.usageQueryString) {
       return;
     }
 
@@ -207,7 +201,7 @@ function Runtime(props: { adapterId?: AdapterId; targets: Targets, mode: 'locate
           setHighlightedNode={setHighlightedNode}
         />
       ) : null}
-      {props.mode === 'locate' && holdingModKey() && currentElement() ? (
+      {!props.usageQueryString && holdingModKey() && currentElement() ? (
         <MaybeOutline
           currentElement={currentElement()!}
           showTreeFromElement={showTreeFromElement}
@@ -215,7 +209,7 @@ function Runtime(props: { adapterId?: AdapterId; targets: Targets, mode: 'locate
           targets={props.targets}
         />
       ) : null}
-      {(props.mode === 'legacy-icons' || props.mode === 'nucleus') && holdingModKey() && icons().length && icons().map((el) =>
+      {props.usageQueryString && holdingModKey() && locatedElements().length && locatedElements().map((el) =>
         <UsageOutline
           currentElement={el as HTMLElement}
           showTreeFromElement={showTreeFromElement}
@@ -281,7 +275,7 @@ export function initRender(
   solidLayer: HTMLDivElement,
   adapter: AdapterId | undefined,
   targets: SetupTargets,
-  mode: 'locate' | 'legacy-icons' | 'nucleus'
+  usageQueryString?: string,
 ) {
   render(
     () => (
@@ -292,7 +286,7 @@ export function initRender(
           })
         )}
         adapterId={adapter}
-        mode={mode}
+        usageQueryString={usageQueryString}
       />
     ),
     solidLayer
