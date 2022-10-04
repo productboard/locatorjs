@@ -1,7 +1,8 @@
 {
-  "name": "turborepo-basic-shared",
+  "name": "@locator/runtime",
   "version": "0.0.0",
   "main": "packages/runtime/dist/index.js",
+  "files": ["packages/runtime/dist/**/*"],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -10,6 +11,12 @@
     "e2e": "turbo run e2e",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "publishPackages": "lerna publish"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.0.1",
+    "@locator/shared": "^0.1.5",
+    "solid-js": "^1.4.4",
+    "tailwindcss": "^3.1.6"
   },
   "devDependencies": {
     "lerna": "^5.2.0",
