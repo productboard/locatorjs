@@ -1,5 +1,5 @@
 {
-  "name": "@locator/runtime",
+  "name": "@locator/runtime-workspace",
   "main": "dist/index.js",
   "version": "0.1.8",
   "scripts": {
@@ -26,7 +26,10 @@
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.19.4",
+    "@babel/preset-typescript": "^7.18.6",
     "@locator/dev-config": "^0.1.2",
+    "@types/jest": "^29.1.2",
     "@types/jsdom": "^16.2.14",
     "babel-preset-solid": "^1.4.4",
     "concurrently": "^7.2.2",

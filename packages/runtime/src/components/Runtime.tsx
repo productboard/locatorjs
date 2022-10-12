@@ -82,6 +82,7 @@ function Runtime(props: { adapterId?: AdapterId; targets: Targets, usageQueryStr
       }
 
       batch(() => {
+        // @ts-expect-error
         setCurrentElement(target);
         // TODO: this is for highlighting elements in the tree, but need to move it to the adapter
         // if (solidMode()[0] === "tree" || solidMode()[0] === "treeFromElement") {

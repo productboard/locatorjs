@@ -2,7 +2,9 @@
   "name": "@locator/runtime",
   "version": "0.0.0",
   "main": "packages/runtime/dist/index.js",
-  "files": ["packages/runtime/dist/**/*"],
+  "files": [
+    "packages/runtime/dist/**/*"
+  ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -24,7 +26,7 @@
     "turbo": "^1.3.4"
   },
   "engines": {
-    "npm": ">=7.0.0",
     "node": ">=14.0.0"
-  }
+  },
+  "packageManager": "yarn@3.2.4"
 }
